@@ -171,7 +171,7 @@ class ExcelResponse(HttpResponse):
                 if headers is None:
                     headers = data[0].keys()
                 data = [[row[col] for col in headers] for row in data]
-                #data.insert(0, headers)
+                # data.insert(0, headers)
             if hasattr(data[0], '__getitem__'):
                 valid_data = True
         import StringIO
@@ -580,7 +580,9 @@ def handle_dongle_sms(message):
                                               ['256777773260', '256752145316',
                                                '256711957281', '256790403038',
                                                '256701205129']):
-        Message.objects.create(direction="O", text=message.text,
+        text = message.text + \
+        ',%s' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f+03'))
+        Message.objects.create(direction="O", text=text,
                                status='Q', connection=message.connection)
         return True
     return False
