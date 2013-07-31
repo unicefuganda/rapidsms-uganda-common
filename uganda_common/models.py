@@ -14,7 +14,7 @@ from eav.models import Attribute
 def parse_district_value(value):
     location_template = STARTSWITH_PATTERN_TEMPLATE % '[a-zA-Z]*'
     regex = re.compile(location_template)
-    toret = find_closest_match(value, Location.objects.filter(type__name='district'))
+    toret = find_closest_match(value, Location.objects.filter(type__slug='district'))
     if not toret:
         raise ValidationError(
             "We didn't recognize your district.  Please carefully type the name of your district and re-send.")
