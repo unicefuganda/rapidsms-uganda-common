@@ -6,6 +6,8 @@ __author__ = 'kenneth'
 
 class AccessMiddleWare(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
+        if request.path == '/':
+            return None
         if not 'wraps' in view_func.func_globals:
             return None
         if request.user.is_authenticated():
