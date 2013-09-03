@@ -9,6 +9,7 @@ from generic.sorters import SimpleSorter
 import re
 from poll.models import Poll, LocationResponseForm, STARTSWITH_PATTERN_TEMPLATE
 from eav.models import Attribute
+from contact.models import Flag
 
 
 def parse_district_value(value):
@@ -77,7 +78,7 @@ class PolymorphicMixin():
 class AccessManager(models.Manager):
     def add_url(self, user, url_conf):
         access = self.get_or_create(user=user)[0]
-        access.allowed_urls.add(AccessUrls.objects.create(url=url_conf))
+        access.allowed_urls.add(AccessUrls.objects.get_or_create(url=url_conf)[0])
 
     def add_group(self, user, group):
         user.groups.add(group)
@@ -114,10 +115,11 @@ class Access(models.Model):
     groups = models.ManyToManyField(Group)
     allowed_locations = models.ManyToManyField(Location)
     allowed_urls = models.ManyToManyField(AccessUrls)
+    flags = models.ManyToManyField(Flag)
     objects = AccessManager()
 
     def __unicode__(self):
-        return "%s" % self.user.username
+        return self.user.username
 
     def denied(self, request, u_path=""):
         path = request.build_absolute_uri()
