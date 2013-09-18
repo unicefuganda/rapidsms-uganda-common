@@ -200,7 +200,7 @@ def parse_district_value(value):
     toret = find_closest_match(value, Location.objects.filter(type__name='district'))
     if not toret:
         raise ValidationError(
-            "We didn't recognize your district.  Please carefully type the name of your district and re-send.")
+            "We didn't recognize your utils district.  Please carefully type the name of your district and re-send.")
     else:
         return toret
 
