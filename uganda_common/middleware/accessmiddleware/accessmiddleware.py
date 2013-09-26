@@ -6,7 +6,9 @@ __author__ = 'kenneth'
 
 class AccessMiddleWare(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if request.path in ['/', '/accounts/login/', '/accounts/logout', '/national-pulse/', '/bestviz/']:
+    #todo we should consider putting these in the db to make them even more specific to other apps
+        if request.path in ['/', '/accounts/login/', '/accounts/logout', '/national-pulse/', '/bestviz/',
+                            '/access/dashboards/']:
             return None
         if not 'wraps' in view_func.func_globals:
             return None
