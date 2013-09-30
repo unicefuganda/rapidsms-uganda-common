@@ -112,8 +112,8 @@ class Access(models.Model):
     Users that aren't in this models follow the normal django auth and permission stuff
     """
     user = models.ForeignKey(User, unique=True)
-    groups = models.ManyToManyField(Group)
-    allowed_locations = models.ManyToManyField(Location)
+    groups = models.ManyToManyField(Group, blank=True)
+    allowed_locations = models.ManyToManyField(Location, blank=True)
     allowed_urls = models.ManyToManyField(AccessUrls)
     flags = models.ManyToManyField(Flag)
     objects = AccessManager()
