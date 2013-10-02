@@ -11,14 +11,16 @@ from poll.models import Poll, LocationResponseForm, STARTSWITH_PATTERN_TEMPLATE
 from eav.models import Attribute
 from contact.models import Flag
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 def parse_district_value(value):
     location_template = STARTSWITH_PATTERN_TEMPLATE % '[a-zA-Z]*'
     regex = re.compile(location_template)
     toret = find_closest_match(value, Location.objects.filter(type__slug='district'))
+    country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
     if not toret:
         raise ValidationError(
-            _("We didn't recognize your district.  Please carefully type the name of your district and re-send."))
+            _("We didn't recognize your %s.  Please carefully type the name of your %s and re-send." % (country_specific_tokens['district'], country_specific_tokens['district'])))
     else:
         return toret
 
