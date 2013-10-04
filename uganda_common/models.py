@@ -19,8 +19,11 @@ def parse_district_value(value):
     toret = find_closest_match(value, Location.objects.filter(type__slug='district'))
     country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
     if not toret:
+        message = _(
+            "We didn't recognize your %(district)s.  Please carefully type the name of your %(district)s and re-send." % {
+            "district": country_specific_tokens['district']})
         raise ValidationError(
-            _("We didn't recognize your %(district).  Please carefully type the name of your %(district) and re-send." % {"district": country_specific_tokens['district']}))
+            message)
     else:
         return toret
 
