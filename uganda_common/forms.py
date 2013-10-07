@@ -1,6 +1,7 @@
 import datetime
 from django import forms
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 class DateRangeForm(forms.Form): # pragma: no cover
 
@@ -50,13 +51,13 @@ class SMSInput(forms.Textarea):
           }
 
           if (chars_left > 1) {
-            str = (chars_left) + " characters left";
+            str = (chars_left) + " %(characters_left)s";
           }
           else if (chars_left > 0) {
-            str = "1 character left";
+            str = "1 %(character_left)s";
           }
           else {
-            str = "No characters left";
+            str = "%(No_characters_left)s";
           }
         } else {
           if (!elem.is('.overlimit')) {
@@ -64,10 +65,10 @@ class SMSInput(forms.Textarea):
           }
 
           if (chars_left < -1) {
-            str = -chars_left + " characters over limit";
+            str = -chars_left + " %(characters_over_limit)s";
           }
           else {
-            str = "1 character over limit";
+            str = "1 %(character_over_limit)s";
           }
         }
         var ok = (count > 0 && count < 161) && (value.replace(regex,"") != elem._value);
@@ -80,7 +81,13 @@ class SMSInput(forms.Textarea):
              //]]>
         </script>
 
-        """%{'name':name}
+        """ % {'name':name,
+             'characters_left': _("characters left"),
+             'character_left': _("character left"),
+             'No_characters_left': _("No characters left"),
+             'characters_over_limit': _("characters over limit"),
+             'character_over_limit': _("character over limit")}
+
         style = """
         width: 18em;
         height: 56px;
