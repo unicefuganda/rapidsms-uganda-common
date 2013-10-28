@@ -37,6 +37,14 @@ Poll.register_poll_type('district', _('District Response'), parse_district_value
                                              SimpleSorter()))),
                         edit_form=LocationResponseForm)
 
+Poll.register_poll_type('l', _('Location-based'), parse_district_value, db_type=Attribute.TYPE_OBJECT, \
+                        view_template='polls/response_location_view.html',
+                        edit_template='polls/response_location_edit.html',
+                        report_columns=((('Text', 'text', True, 'message__text', SimpleSorter()), (
+                            'Location', 'location', True, 'eav_values__generic_value_id', SimpleSorter()), (
+                                             'Categories', 'categories', True, 'categories__category__name',
+                                             SimpleSorter()))),
+                        edit_form=LocationResponseForm)
 
 class PolymorphicManager(models.Manager):
     def get_query_set(self):
