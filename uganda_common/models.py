@@ -14,19 +14,27 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 
 def parse_district_value(value):
-    location_template = STARTSWITH_PATTERN_TEMPLATE % '[a-zA-Z]*'
-    regex = re.compile(location_template)
-    toret = find_closest_match(value, Location.objects.filter(type__slug='district'))
+    district_value = find_closest_match(value, Location.objects.filter(type__slug='district'))
     country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
-    if not toret:
+    if not district_value:
         message = _(
             "We didn't recognize your %(district)s.  Please carefully type the name of your %(district)s and re-send." % {
             "district": country_specific_tokens['district']})
         raise ValidationError(
             message)
     else:
-        return toret
+        return district_value
 
+def parse_location_value(value):
+    location_value = find_closest_match(value, Location.objects.exclude(type='district'))
+    if not location_value:
+        message = _(
+            "We didn't recognize your %(location)s.  Please carefully type the name of your %(location)s and re-send." % {
+            "location": "location"})
+        raise ValidationError(
+            message)
+    else:
+        return location_value
 
 Poll.register_poll_type('district', _('District Response'), parse_district_value, db_type=Attribute.TYPE_OBJECT, \
                         view_template='polls/response_location_view.html',
@@ -37,7 +45,7 @@ Poll.register_poll_type('district', _('District Response'), parse_district_value
                                              SimpleSorter()))),
                         edit_form=LocationResponseForm)
 
-Poll.register_poll_type('l', _('Location-based'), parse_district_value, db_type=Attribute.TYPE_OBJECT, \
+Poll.register_poll_type('l', _('Location-based'), parse_location_value, db_type=Attribute.TYPE_OBJECT, \
                         view_template='polls/response_location_view.html',
                         edit_template='polls/response_location_edit.html',
                         report_columns=((('Text', 'text', True, 'message__text', SimpleSorter()), (
