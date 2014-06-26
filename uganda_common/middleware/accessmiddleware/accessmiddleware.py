@@ -10,7 +10,10 @@ class AccessMiddleWare(object):
         if request.path in ['/', '/accounts/login/', '/accounts/logout', '/national-pulse/', '/bestviz/',
                             '/access/dashboards/', '/pollresults']:
             return None
-        if not 'wraps' in view_func.func_globals:
+        try:
+            if not 'wraps' in view_func.func_globals:
+                return None
+        except:
             return None
         if request.user.is_authenticated():
             try:
