@@ -28,6 +28,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.utils.translation import gettext as _
 from django.db import connection
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -200,8 +201,9 @@ def parse_district_value(value):
     regex = re.compile(location_template)
     toret = find_closest_match(value, Location.objects.filter(type__name='district'))
     if not toret:
-        raise ValidationError(
-            "We didn't recognize your utils district.  Please carefully type the name of your district and re-send.")
+        country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
+        message = _(getattr(settings, 'UNRECOGNIZED_DISTRICT_RESPONSE_TEXT', '') % {"district": country_specific_tokens['district']})
+        raise ValidationError(message)
     else:
         return toret
 

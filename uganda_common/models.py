@@ -13,26 +13,22 @@ from contact.models import Flag
 from django.utils.translation import gettext as _
 from django.conf import settings
 
+
+
 def parse_district_value(value):
     district_value = find_closest_match(value, Location.objects.filter(type__slug='district'))
     country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
     if not district_value:
-        message = _(
-            "We didn't recognize your %(district)s.  Please carefully type the name of your %(district)s and re-send." % {
-            "district": country_specific_tokens['district']})
-        raise ValidationError(
-            message)
+        message = _(getattr(settings, 'UNRECOGNIZED_DISTRICT_RESPONSE_TEXT', '') % {"district": country_specific_tokens['district']})
+        raise ValidationError(message)
     else:
         return district_value
 
 def parse_location_value(value):
     location_value = find_closest_match(value, Location.objects.exclude(type='district'))
     if not location_value:
-        message = _(
-            "We didn't recognize your %(location)s.  Please carefully type the name of your %(location)s and re-send." % {
-            "location": "location"})
-        raise ValidationError(
-            message)
+        message = _( getattr(settings, 'UNRECOGNIZED_LOCATION_RESPONSE_TEXT', '') % {"location": "location"})
+        raise ValidationError(message)
     else:
         return location_value
 
