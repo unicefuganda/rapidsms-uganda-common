@@ -19,7 +19,7 @@ def parse_district_value(value):
     district_value = find_closest_match(value, Location.objects.filter(type__slug='district'))
     country_specific_tokens = getattr(settings, 'COUNTRY_SPECIFIC_TOKENS', {"district":"district"})
     if not district_value:
-        message = _(getattr(settings, 'UNRECOGNIZED_DISTRICT_RESPONSE_TEXT', '') % {"district": country_specific_tokens['district']})
+        message = _(getattr(settings, 'UNRECOGNIZED_DISTRICT_RESPONSE_TEXT', '')%country_specific_tokens)
         raise ValidationError(message)
     else:
         return district_value
@@ -27,7 +27,7 @@ def parse_district_value(value):
 def parse_location_value(value):
     location_value = find_closest_match(value, Location.objects.exclude(type='district'))
     if not location_value:
-        message = _( getattr(settings, 'UNRECOGNIZED_LOCATION_RESPONSE_TEXT', '') % {"location": "location"})
+        message = _(getattr(settings, 'UNRECOGNIZED_LOCATION_RESPONSE_TEXT', ''))
         raise ValidationError(message)
     else:
         return location_value
