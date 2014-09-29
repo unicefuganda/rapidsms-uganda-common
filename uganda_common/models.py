@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.forms import ValidationError
 from django.db import models
 from django.db.models.query import QuerySet
+from rapidsms_httprouter.models import Message
 from script.utils.handling import find_closest_match
 from rapidsms.contrib.locations.models import Location
 from generic.sorters import SimpleSorter
@@ -133,6 +134,7 @@ class Access(models.Model):
     allowed_locations = models.ManyToManyField(Location, blank=True)
     allowed_urls = models.ManyToManyField(AccessUrls)
     flags = models.ManyToManyField(Flag)
+    assigned_messages = models.ManyToManyField(Message, blank=True, related_name='dashboards')
     objects = AccessManager()
 
     def __unicode__(self):
