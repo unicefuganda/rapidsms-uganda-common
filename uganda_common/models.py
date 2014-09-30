@@ -140,6 +140,9 @@ class Access(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    def can_assign(self):
+        return not self.assigned_messages.exists()
+
     def denied(self, request, u_path=""):
         path = request.build_absolute_uri()
         path = urlparse.urlparse(path)[2]
