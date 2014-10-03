@@ -2,6 +2,18 @@ import datetime
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from rapidsms.contrib.locations.models import Location
+from uganda_common.models import Access
+
+
+class AccessForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AccessForm, self).__init__(*args, **kwargs)
+        self.fields['allowed_locations'].queryset = Location.objects.filter(type='district').order_by('name')
+
+    class Meta:
+        model = Access
+        exclude = ['assigned_messages']
 
 class DateRangeForm(forms.Form): # pragma: no cover
 
