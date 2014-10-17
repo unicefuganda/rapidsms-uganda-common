@@ -168,7 +168,7 @@ class ExcelResponse(HttpResponse):
                  force_csv=False):
         # Make sure we've got the right type of data to work with
         valid_data = False
-        if hasattr(data, '__getitem__'):
+        try:
             if isinstance(data[0], dict):
                 if headers is None:
                     headers = data[0].keys()
@@ -176,6 +176,8 @@ class ExcelResponse(HttpResponse):
                 # data.insert(0, headers)
             if hasattr(data[0], '__getitem__'):
                 valid_data = True
+        except Exception as e:
+            logger.debug("Error at dict creation:", e)
         import StringIO
 
         output = StringIO.StringIO()
