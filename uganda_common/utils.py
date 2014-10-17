@@ -117,7 +117,7 @@ def normalize_value(value):
     if isinstance(value, tuple(openpyxl.shared.NUMERIC_TYPES)):
         return value
     elif isinstance(value, (bool, datetime.date)):
-        return value
+        return str(value)
     elif isinstance(value, types.NoneType):
         return ""
     elif isinstance(value, types.StringType):
@@ -168,16 +168,14 @@ class ExcelResponse(HttpResponse):
                  force_csv=False):
         # Make sure we've got the right type of data to work with
         valid_data = False
-        try:
+        if hasattr(data, '__getitem__'):
             if isinstance(data[0], dict):
                 if headers is None:
                     headers = data[0].keys()
-                data = [[str(row[col]) for col in headers] for row in data]
+                data = [[row[col] for col in headers] for row in data]
                 # data.insert(0, headers)
             if hasattr(data[0], '__getitem__'):
                 valid_data = True
-        except Exception as e:
-            logger.debug("Error at dict creation:", e)
         import StringIO
 
         output = StringIO.StringIO()
